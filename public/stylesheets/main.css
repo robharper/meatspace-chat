@@ -378,6 +378,17 @@ input::-webkit-input-placeholder {
     color: #eee;
 }
 
+.chats li .timeago {
+    font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+    color: #aaa;
+    font-size: 0.8rem;
+    font-weight: 300;
+    margin: 8px 18px;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
 .chats li p span {
     color: #70b4e4;
     font-size: 0.8rem;
@@ -503,6 +514,14 @@ ul li.on {
         font-size: .7rem;
         color: #f181ad;
         background: none;
+    }
+
+    .chats li .timeago {
+        top: auto;
+        left: 153px;
+        bottom: 0;
+        margin: 5px 0;
+        font-size: .7rem;
     }
     
     .chats li img,

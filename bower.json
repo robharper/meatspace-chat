@@ -7,6 +7,7 @@
     "fingerprint": "0.5.0",
     "js-md5": "1.0.1",
     "animated-gif": "sole/Animated_GIF#f951066bd13c8af0e40877efeb1b27bfb7156699",
-    "requirejs": "2.1.5"
+    "requirejs": "2.1.5",
+    "moment": "~2.4.0"
   }
 }

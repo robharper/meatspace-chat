@@ -1,5 +1,5 @@
-define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerprint', 'md5', 'waypoints'],
-  function ($, linkify, gumHelper, VideoShooter, Fingerprint, md5) {
+define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerprint', 'md5', 'moment', 'waypoints'],
+  function ($, linkify, gumHelper, VideoShooter, Fingerprint, md5, moment) {
   'use strict';
 
   var html = $('html');
@@ -29,6 +29,27 @@ define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerp
   }
 
   var CHAT_LIMIT = 25;
+  var TIMEAGO_UPDATE_PERIOD = 10000;
+
+  moment.lang('en', {
+    relativeTime : {
+      past: '%s',
+      future: '%s',
+      s:  function (number) {
+        return number <= 5 ? 'now' : number+'s';
+      },
+      m:  '1m',
+      mm: '%dm',
+      h:  '1h',
+      hh: '%dh',
+      d:  '1d',
+      dd: '%dd',
+      M:  '1M',
+      MM: '%dM',
+      y:  '1y',
+      yy: '%dy'
+    }
+  });
 
   var isMuted = function (fingerprint) {
     return mutedArr.indexOf(fingerprint) !== -1;
@@ -54,6 +75,21 @@ define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerp
     }, {
       offset: '100%'
     });
+  };
+
+  var nextTimeAgoUpdate;
+  var updateTimeAgo = function() {
+    clearTimeout(nextTimeAgoUpdate);
+    
+    chatList.find('.timeago').each( function(i, el) {
+      var timestamp = parseInt(el.getAttribute('data-timestamp'), 10);
+      if (isNaN(timestamp)) {
+        return;
+      }
+      el.textContent = moment(timestamp).fromNow();
+    });
+    
+    nextTimeAgoUpdate = setTimeout( updateTimeAgo, TIMEAGO_UPDATE_PERIOD );
   };
 
   var renderChat = function (c) {
@@ -85,6 +121,12 @@ define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerp
             btn.className = 'mute';
             li.appendChild(btn);
           }
+
+          var timeago = document.createElement('small');
+          timeago.setAttribute('data-timestamp', c.chat.value.created);
+          timeago.className = 'timeago';
+          timeago.textContent = moment(c.chat.value.created).fromNow();
+          li.appendChild(timeago);
 
           var message = document.createElement('p');
           message.textContent = c.chat.value.message;
@@ -180,6 +222,7 @@ define(['jquery', 'linkify', './base/gumhelper', './base/videoShooter', 'fingerp
   socket.on('message', function (data) {
     debug("Incoming chat key='%s'", data.chat.key);
     renderChat(data);
+    updateTimeAgo();
   });
 
   body.on('click', '.mute', function (ev) {

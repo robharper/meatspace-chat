@@ -7,7 +7,8 @@ requirejs.config({
     'fingerprint': 'lib/fingerprint/fingerprint',
     'linkify': 'linkify',
     'md5': 'lib/js-md5/js/md5',
-    'waypoints': 'lib/jquery-waypoints/waypoints'
+    'waypoints': 'lib/jquery-waypoints/waypoints',
+    'moment': 'lib/moment/moment'
   },
   shim: {
     'jquery': {
